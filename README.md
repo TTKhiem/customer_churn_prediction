@@ -1,36 +1,38 @@
-Customer Churn Prediction
+# Customer Churn Prediction
 
-A machine learning project for predicting whether a customer will churn
-based on demographic, service, contract, and payment information.
+A machine learning project for predicting whether a customer is likely to churn based on demographic, service, contract, and payment information.
 
-Overview
+## Overview
 
-Customer churn is an important problem for subscription-based
-businesses. Identifying customers who are likely to churn can help
-businesses better understand customer behavior and support customer
-retention strategies.
-\
-This project develops a binary classification model using XGBoost and
-evaluates its performance using F1-score, precision, recall, and
-accuracy.
+Customer churn is an important problem for subscription-based businesses. Predicting which customers are likely to leave can help businesses better understand customer behavior and support customer retention strategies.
 
-Dataset
+This project builds a **binary classification model using XGBoost** to predict customer churn. The model is evaluated using **accuracy, precision, recall, and F1-score**, with F1-score used as the primary metric for model selection.
 
-The dataset is from the Kaggle competition Playground Series S6E3.
+## Dataset
 
-The training dataset contains 594,194 observations and 21 columns,
-including demographic information, service-related features, contract
-and payment information, and the target variable Churn.
+The dataset is from the Kaggle competition **Playground Series S6E3**.
 
-The raw CSV files are not included in this repository.
+The training dataset contains **594,194 observations and 21 columns**, including:
 
-Before running the notebook, download the competition dataset from
-Kaggle and place train.csv and test.csv in the data/ directory.
+* Demographic information
+* Service-related information
+* Contract information
+* Payment information
+* Customer churn target
 
-See data/README.md for more information.
+The raw CSV files are **not included in this repository**.
 
-Project Structure
+Before running the notebook, download the competition dataset from Kaggle and place the files in the `data/` directory:
 
+```text
+data/
+├── train.csv
+└── test.csv
+```
+
+## Project Structure
+
+```text
 customer_churn_prediction/
 │
 ├── data/
@@ -45,116 +47,196 @@ customer_churn_prediction/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
-Workflow
+```
 
-1.  Exploratory Data Analysis
-2.  Data Preprocessing
-3.  Train / Validation Split
-4.  XGBoost Model Training
-5.  Hyperparameter Tuning with GridSearchCV
-6.  Model Evaluation
-7.  Final Model Training
-8.  Prediction on the Test Set
+## Machine Learning Workflow
 
-Exploratory Data Analysis
+The project follows the following workflow:
 
-The dataset is examined to understand:
+1. Exploratory Data Analysis
+2. Data Preprocessing
+3. Train / Validation Split
+4. XGBoost Model Training
+5. Hyperparameter Tuning with GridSearchCV
+6. Model Evaluation
+7. Final Model Training
+8. Prediction on the Test Set
+9. Submission File Generation
 
--   Dataset dimensions
--   Sample observations
--   Missing values
--   Number of unique values
--   Data types
--   Categorical and numerical features
+## Exploratory Data Analysis
 
-The training data contains no missing values in the available columns.
+The dataset is examined to understand its structure and characteristics, including:
 
-Data Preprocessing
+* Dataset dimensions
+* Sample observations
+* Missing values
+* Number of unique values
+* Data types
+* Categorical features
+* Numerical features
+* Target variable distribution
 
-The preprocessing stage includes:
+The available training features contain **no missing values**, so no missing-value imputation is required during preprocessing.
 
--   Encoding binary categorical features into numerical values
--   One-hot encoding multi-class categorical features
--   Separating the target variable Churn from the input features
--   Splitting the data into training and validation sets
+## Data Preprocessing
+
+Categorical features are converted into numerical representations before model training.
+
+The preprocessing includes:
+
+* Encoding binary categorical variables
+* One-hot encoding multi-class categorical variables
+* Separating the target variable `Churn` from the input features
+* Converting the target variable into binary values
+* Splitting the data into training and validation sets
 
 The target variable is encoded as:
 
-Yes -> 1 No -> 0
+```text
+Yes → 1
+No  → 0
+```
 
-Model
+A stratified train/validation split is used to maintain the class distribution between the two subsets.
 
-XGBoost
+## Model
 
-XGBoost is used as the primary classification model for predicting
-customer churn.
+### XGBoost
 
-The model uses customer demographic, service, contract, and
-payment-related features to predict whether a customer is likely to
-churn.
+**XGBoost (Extreme Gradient Boosting)** is used as the primary classification algorithm.
 
-Hyperparameter Tuning
+The model learns relationships between customer characteristics and churn behavior using features related to:
 
-GridSearchCV is used to systematically evaluate different combinations
-of XGBoost hyperparameters using 5-fold cross-validation.
+* Customer demographics
+* Services
+* Contracts
+* Payment methods
+* Other customer account information
 
-The following hyperparameters are explored:
+XGBoost was selected because it is a strong tree-based algorithm for structured/tabular data and can capture nonlinear relationships between features.
 
--   max_depth
--   min_child_weight
--   learning_rate
--   n_estimators
+## Hyperparameter Tuning
 
-The grid contains 81 hyperparameter combinations, resulting in 405 model
-fits with 5-fold cross-validation.
+`GridSearchCV` is used to search for a suitable combination of XGBoost hyperparameters.
 
-F1-score is used as the primary optimization metric because it balances
-precision and recall.
+The following parameters are explored:
 
-Evaluation
+* `max_depth`
+* `min_child_weight`
+* `learning_rate`
+* `n_estimators`
 
-The tuned model is evaluated on a held-out validation set using:
+The original grid contains **81 hyperparameter combinations**.
 
--   Accuracy: proportion of correctly classified observations
--   Precision: proportion of predicted churners that actually churned
--   Recall: proportion of actual churners correctly identified
--   F1-score: harmonic mean of precision and recall
+With **5-fold cross-validation**, this results in:
 
-The detailed evaluation results are available in the Jupyter notebook.
+```text
+81 combinations × 5 folds = 405 model fits
+```
 
-Final Model and Prediction
+The primary optimization metric is **F1-score**.
 
-After selecting the best hyperparameters through GridSearchCV, the final
-XGBoost model is trained using the available training data.
+F1-score is used because it considers both precision and recall and is therefore useful when evaluating a churn classification problem where correctly identifying churners is important.
 
-The trained model is then used to generate churn predictions for the
-test dataset.
+## Evaluation
 
-The predictions are formatted into a submission file containing id and
-Churn.
+The tuned model is evaluated on a held-out validation set using four classification metrics:
 
-How to Run
+| Metric    | Description                                            |
+| --------- | ------------------------------------------------------ |
+| Accuracy  | Proportion of all observations classified correctly    |
+| Precision | Proportion of predicted churners that actually churned |
+| Recall    | Proportion of actual churners correctly identified     |
+| F1-score  | Harmonic mean of precision and recall                  |
 
-1.  Clone the repository.
-2.  Create and activate a virtual environment:
+The detailed evaluation results and model performance can be found in the Jupyter notebook.
 
-python3 -m venv .venv source .venv/bin/activate
+## Final Model and Prediction
 
-3.  Install dependencies:
+After hyperparameter tuning, the best XGBoost configuration obtained from `GridSearchCV` is used for the final model.
 
+The final model is then used to generate churn predictions for the Kaggle test dataset.
+
+The prediction output contains:
+
+```text
+id
+Churn
+```
+
+The generated prediction file can then be submitted to the Kaggle competition.
+
+## How to Run
+
+### 1. Clone the repository
+
+```bash
+git clone <your-github-repository-url>
+cd customer_churn_prediction
+```
+
+### 2. Create a virtual environment
+
+```bash
+python3 -m venv .venv
+```
+
+Activate the environment:
+
+```bash
+source .venv/bin/activate
+```
+
+On Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-4.  Download the Kaggle dataset and place train.csv and test.csv inside
-    the data/ directory.
-5.  Open notebooks/customer_churn_analysis.ipynb and run the notebook
-    from beginning to end.
+### 4. Add the dataset
 
-Future Improvements
+Download the dataset from the Kaggle competition and place the following files inside the `data/` directory:
 
-Potential improvements include:
+```text
+data/
+├── train.csv
+└── test.csv
+```
 
--   Feature engineering
--   More extensive hyperparameter tuning
--   Comparison with other tree-based models
--   Classification threshold tuning
--   Additional model interpretability analysis
+### 5. Run the notebook
+
+Open:
+
+```text
+notebooks/customer_churn_analysis.ipynb
+```
+
+Run the notebook from beginning to end.
+
+## Future Improvements
+
+Potential improvements for future versions of the project include:
+
+* Feature engineering
+* More extensive hyperparameter tuning
+* Comparison with other tree-based models
+* Classification threshold tuning
+* Feature importance analysis
+* Model interpretability using SHAP
+* Further optimization of model training time
+
+## Technologies
+
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* XGBoost
+* Jupyter Notebook
+* Kaggle
