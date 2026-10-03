@@ -240,3 +240,11 @@ Potential improvements for future versions of the project include:
 * XGBoost
 * Jupyter Notebook
 * Kaggle
+
+## Kaggle Results
+
+This project was submitted to the Kaggle competition **Playground Series S6E3**.
+
+- **Kaggle Competition:** [Playground Series S6E3](YOUR_COMPETITION_LINK)
+- **Kaggle Submission:** [View my submission and score](YOUR_SUBMISSION_LINK)
+- **Validation F1-score:** `YOUR_F1_SCORE`
